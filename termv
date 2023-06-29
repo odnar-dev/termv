@@ -35,6 +35,39 @@ add_src(){
 	CHANNEL_COUNT=$((CHANNEL_COUNT+1)); CHANNEL_NAME[$CHANNEL_COUNT]="${1:?}"; CHANNEL_SOURCE[$CHANNEL_COUNT]="${2:?}"; CHANNEL_TYPE[$CHANNEL_COUNT]="${3:?}"
 }
 
+download_file(){
+	local old_etag new_etag
+	local filename=$1; local URL=$2
+
+	local filePath="${TERMV_CACHE_DIR:?}/${filename}"
+	local etagPath="${TERMV_CACHE_DIR:?}/${filename}_etag"
+	local tmp_filePath="${TERMV_CACHE_DIR:?}/${filename}_tmp"
+
+	printf '%s' "Downloading ${filename:?}... "
+
+	[ -f "${etagPath:?}" ] && old_etag=$(<"${etagPath}") || old_etag="null"
+
+	curl -s "${URL}" --etag-compare "${etagPath:?}" --etag-save "${etagPath:?}" -o "${tmp_filePath:?}" \
+		 -H "accept-encoding:gzip" --compressed && downloaded=true || downloaded=false
+
+	new_etag=$(<"${etagPath}")
+
+	if [ "${downloaded}" ] && [ "${new_etag}" = "${old_etag}" ]; then
+		touch "${filePath:?}" ;
+		printf '\033[33;1m %s \033[0m\n' "Already up to date." ;
+		return 0
+	elif [ "${downloaded}" ]; then
+		mv -f "${tmp_filePath:?}" "${filePath:?}"
+		printf '\033[32;1m %s \033[0m\n' "Done!" ;
+		return 0
+	else
+		rm -f "${etagPath:?}" "${tmp_filePath:?}"
+		echo "${oldetag}" > "${etagPath}"
+		printf '\033[31;1m %s \033[0m\n' "Uh oh, failed!"
+		return 1
+	fi
+}
+
 if ! has "${TERMV_SCRIPT_NAME:-termv}" ;then
 	prnt_log "wrn : ${TERMV_SCRIPT_NAME:-termv} in not intalled in your path file"
 	TERMV_isINSTALLED=false
@@ -52,3 +85,4 @@ fi
 need ${TERMV_DEPS[@]} || exit 1
 
 mkdir -p "${TERMV_CACHE_DIR:?}"
+
