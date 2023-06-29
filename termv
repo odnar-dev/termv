@@ -1,1 +1,8 @@
 #!/usr/bin/env bash
+readonly BASH_BINARY="$(which bash)"
+readonly TERMV_SCRIPT_NAME="$(basename "$0")"
+readonly TERMV_VERSION=2.0
+
+TERMV_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/termv"
+TERMV_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/termv"
+
