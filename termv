@@ -6,6 +6,8 @@ readonly TERMV_VERSION=2.0
 TERMV_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/termv"
 TERMV_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/termv"
 
+TERMV_isINSTALLED=${TERMV_isINSTALLED:-true}
+
 has() {
 	case "$(command -v "$1" 2>/dev/null)" in alias*|"") return 1 ; esac
 }
@@ -16,3 +18,15 @@ need(){
 	[ -n "${dependencies_not_installed}" ] && { echo "err : missing dependencies, please install: ${dependencies_not_installed%??}."; return 1 ;}
 	return 0
 }
+
+prnt_log() {
+	[[ "${TERMV_LOG:-false}" == false ]] && return 0
+	echo "$@"
+}
+
+if ! has "${TERMV_SCRIPT_NAME:-termv}" ;then
+	prnt_log "wrn : ${TERMV_SCRIPT_NAME:-termv} in not intalled in your path file"
+	TERMV_isINSTALLED=false
+	TERMV_CONFIG_DIR="$PWD/config"
+	TERMV_CACHE_DIR="$PWD/cache"
+fi
