@@ -6,6 +6,8 @@ readonly TERMV_VERSION=2.0
 TERMV_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/termv"
 TERMV_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/termv"
 
+TERMV_DEPS=(curl fzf)
+
 TERMV_isINSTALLED=${TERMV_isINSTALLED:-true}
 
 has() {
@@ -39,3 +41,5 @@ if [ -f "${TERMV_CONFIG_DIR}/config" ] ; then
 else
 	prnt_log "wrn : you don't have a config file; using the default settings"
 fi
+
+need ${TERMV_DEPS[@]} || exit 1
