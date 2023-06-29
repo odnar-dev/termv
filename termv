@@ -10,6 +10,11 @@ TERMV_DEPS=(curl fzf)
 
 TERMV_isINSTALLED=${TERMV_isINSTALLED:-true}
 
+CHANNEL_COUNT=0
+declare -A CHANNEL_NAME
+declare -A CHANNEL_SOURCE
+declare -A CHANNEL_TYPE
+
 has() {
 	case "$(command -v "$1" 2>/dev/null)" in alias*|"") return 1 ; esac
 }
@@ -24,6 +29,10 @@ need(){
 prnt_log() {
 	[[ "${TERMV_LOG:-false}" == false ]] && return 0
 	echo "$@"
+}
+
+add_src(){
+	CHANNEL_COUNT=$((CHANNEL_COUNT+1)); CHANNEL_NAME[$CHANNEL_COUNT]="${1:?}"; CHANNEL_SOURCE[$CHANNEL_COUNT]="${2:?}"; CHANNEL_TYPE[$CHANNEL_COUNT]="${3:?}"
 }
 
 if ! has "${TERMV_SCRIPT_NAME:-termv}" ;then
