@@ -30,3 +30,12 @@ if ! has "${TERMV_SCRIPT_NAME:-termv}" ;then
 	TERMV_CONFIG_DIR="$PWD/config"
 	TERMV_CACHE_DIR="$PWD/cache"
 fi
+
+mkdir -p "${TERMV_CACHE_DIR:?}"
+
+if [ -f "${TERMV_CONFIG_DIR}/config" ] ; then
+	prnt_log "log : loading config file from \`${TERMV_CONFIG_DIR}/config\`"
+	. "${TERMV_CONFIG_DIR}/config"
+else
+	prnt_log "wrn : you don't have a config file; using the default settings"
+fi
