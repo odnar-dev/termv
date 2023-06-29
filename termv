@@ -6,3 +6,13 @@ readonly TERMV_VERSION=2.0
 TERMV_CACHE_DIR="${XDG_CACHE_HOME:-$HOME/.cache}/termv"
 TERMV_CONFIG_DIR="${XDG_CONFIG_HOME:-$HOME/.config}/termv"
 
+has() {
+	case "$(command -v "$1" 2>/dev/null)" in alias*|"") return 1 ; esac
+}
+
+need(){
+	local prog ; local dependencies_not_installed ;
+	for prog in $@; do ! has "$prog" && dependencies_not_installed="${dependencies_not_installed}${prog}, " ; done
+	[ -n "${dependencies_not_installed}" ] && { echo "err : missing dependencies, please install: ${dependencies_not_installed%??}."; return 1 ;}
+	return 0
+}
