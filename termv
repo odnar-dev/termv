@@ -33,8 +33,6 @@ if ! has "${TERMV_SCRIPT_NAME:-termv}" ;then
 	TERMV_CACHE_DIR="$PWD/cache"
 fi
 
-mkdir -p "${TERMV_CACHE_DIR:?}"
-
 if [ -f "${TERMV_CONFIG_DIR}/config" ] ; then
 	prnt_log "log : loading config file from \`${TERMV_CONFIG_DIR}/config\`"
 	. "${TERMV_CONFIG_DIR}/config"
@@ -43,3 +41,5 @@ else
 fi
 
 need ${TERMV_DEPS[@]} || exit 1
+
+mkdir -p "${TERMV_CACHE_DIR:?}"
