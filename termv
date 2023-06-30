@@ -10,10 +10,10 @@ TERMV_DEPS=(curl fzf)
 
 TERMV_isINSTALLED=${TERMV_isINSTALLED:-true}
 
-CHANNEL_COUNT=0
-declare -A CHANNEL_NAME
-declare -A CHANNEL_SOURCE
-declare -A CHANNEL_TYPE
+PLAYLIST_COUNT=0
+declare -A PLAYLIST_NAME
+declare -A PLAYLIST_SOURCE
+declare -A PLAYLIST_TYPE
 
 has() {
 	case "$(command -v "$1" 2>/dev/null)" in alias*|"") return 1 ; esac
@@ -32,7 +32,7 @@ prnt_log() {
 }
 
 add_src(){
-	CHANNEL_COUNT=$((CHANNEL_COUNT+1)); CHANNEL_NAME[$CHANNEL_COUNT]="${1:?}"; CHANNEL_SOURCE[$CHANNEL_COUNT]="${2:?}"; CHANNEL_TYPE[$CHANNEL_COUNT]="${3:?}"
+	PLAYLIST_COUNT=$((PLAYLIST_COUNT+1)); PLAYLIST_NAME[$PLAYLIST_COUNT]="${1:?}"; PLAYLIST_SOURCE[$PLAYLIST_COUNT]="${2:?}"; PLAYLIST_TYPE[$PLAYLIST_COUNT]="${3:?}"
 }
 
 download_file(){
@@ -85,4 +85,3 @@ fi
 need ${TERMV_DEPS[@]} || exit 1
 
 mkdir -p "${TERMV_CACHE_DIR:?}"
-
